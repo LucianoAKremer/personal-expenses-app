@@ -4,9 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.lifecycle.ViewModelProvider
-import androidx.room.Room
 import com.LucianoAKremer.personal_expenses_app.data.ExpenseDatabase
-import com.LucianoAKremer.personal_expenses_app.data.Expenses.ExpenseDatabase
 import com.LucianoAKremer.personal_expenses_app.repository.ExpenseRepository
 import com.LucianoAKremer.personal_expenses_app.ui.ExpensesScreen
 import com.LucianoAKremer.personal_expenses_app.viewmodel.ExpenseViewModel
@@ -21,8 +19,7 @@ class MainActivity : ComponentActivity() {
         val db = ExpenseDatabase.getDatabase(applicationContext) // Nueva forma
 
         // Crear repo
-        val repository = ExpenseRepository(db.expenseDao())
-
+        val repository = ExpenseRepository(db.expenseDao(), db.categoryDao()) // Pasa categoryDao
         // Crear ViewModel
         viewModel = ViewModelProvider(
             this,

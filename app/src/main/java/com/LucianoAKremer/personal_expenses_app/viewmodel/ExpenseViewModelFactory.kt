@@ -2,7 +2,7 @@ package com.LucianoAKremer.personal_expenses_app.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.LucianoAKremer.personal_expenses_app.repository.ExpenseRepository
+import com.LucianoAKremer.personal_expenses_app.repository.ExpenseRepository // Asegúrate que esta es la correcta
 
 class ExpenseViewModelFactory(
     private val repository: ExpenseRepository
@@ -13,6 +13,7 @@ class ExpenseViewModelFactory(
         if (modelClass.isAssignableFrom(ExpenseViewModel::class.java)) {
             return ExpenseViewModel(repository) as T
         }
-        throw IllegalArgumentException("Unknown ViewModel class")
+        throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
     }
 }
+    

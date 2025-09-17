@@ -12,15 +12,14 @@ import java.util.Date
         entity = Category::class,
         parentColumns = ["id"],
         childColumns = ["categoryId"],
-        onDelete = ForeignKey.SET_DEFAULT // O CASCADE, según prefieras
+        onDelete = ForeignKey.SET_DEFAULT // O CASCADE
     )],
     indices = [Index(value = ["categoryId"])]
 )
 data class Expense(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val amount: Double,
-    val categoryId: Int?, // Puede ser nullable si quieres gastos sin categoría o usas SET_DEFAULT
+    val categoryId: Int?,
     val note: String?,
     val date: Date
 )
-    

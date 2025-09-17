@@ -5,7 +5,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.LucianoAKremer.personal_expenses_app.data.Expenses.Expense
+import com.LucianoAKremer.personal_expenses_app.data.Expense
 
 @Composable
 fun MetricsPanel(expenses: List<Expense>) {

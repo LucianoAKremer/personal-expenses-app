@@ -7,7 +7,6 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.LucianoAKremer.personal_expenses_app.data.Expenses.ExpenseDao
 
 @Database(entities = [Expense::class, Category::class], version = 2, exportSchema = false) // Incrementa la versión
 @TypeConverters(Converters::class)

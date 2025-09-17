@@ -61,7 +61,14 @@ dependencies {
     // Room (runtime + ktx + compiler)
     implementation("androidx.room:room-runtime:2.6.1")
     implementation("androidx.room:room-ktx:2.6.1")
+    implementation(libs.litert.support.api)
     kapt("androidx.room:room-compiler:2.6.1")
+
+
+
+    implementation("androidx.compose.material:material-icons-core:1.6.8") // O la versión más reciente compatible con tu BOM de Compose
+    implementation("androidx.compose.material:material-icons-extended:1.6.8") // O la versión más reciente
+
 
     // Testing
     testImplementation(libs.junit)

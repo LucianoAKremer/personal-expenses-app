@@ -3,40 +3,63 @@ package com.LucianoAKremer.personal_expenses_app.ui
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.LucianoAKremer.personal_expenses_app.data.Category // Importa Category
 import java.util.Date
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FiltersPanel(
-    categories: List<String>,
-    onCategorySelected: (String?) -> Unit,
-    dateRange: Pair<Date?, Date?>,
-    onDateRangeChanged: (Pair<Date?, Date?>) -> Unit
+    categories: List<Category>, // Cambiado a List<Category>
+    onCategorySelected: (Category?) -> Unit, // Cambiado a Category?
+    // dateRange: Pair<Date?, Date?>, // Mantener si se usa
+    // onDateRangeChanged: (Pair<Date?, Date?>) -> Unit // Mantener si se usa
 ) {
-    var selectedCategory by remember { mutableStateOf<String?>(null) }
+    var selectedCategoryState by remember { mutableStateOf<Category?>(null) }
+    var expanded by remember { mutableStateOf(false) }
 
-    Column(modifier = Modifier.fillMaxWidth().padding(8.dp)) {
-        // Filtro por categoría
+    Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 4.dp)) {
         ExposedDropdownMenuBox(
-            expanded = false,
-            onExpandedChange = {}
+            expanded = expanded,
+            onExpandedChange = { expanded = !expanded }
         ) {
-            TextField(
-                value = selectedCategory ?: "Todas las categorías",
+            OutlinedTextField(
+                value = selectedCategoryState?.name ?: "Todas las categorías",
                 onValueChange = {},
-                label = { Text("Categoría") },
+                label = { Text("Filtrar por Categoría") },
                 readOnly = true,
-                modifier = Modifier.fillMaxWidth()
+                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                modifier = Modifier.menuAnchor().fillMaxWidth()
             )
-            // Aquí se podría implementar el DropdownMenu con categorías
+            ExposedDropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false }
+            ) {
+                DropdownMenuItem(
+                    text = { Text("Todas las categorías") },
+                    onClick = {
+                        selectedCategoryState = null
+                        onCategorySelected(null)
+                        expanded = false
+                    }
+                )
+                categories.forEach { category ->
+                    DropdownMenuItem(
+                        text = { Text(category.name) },
+                        onClick = {
+                            selectedCategoryState = category
+                            onCategorySelected(category)
+                            expanded = false
+                        }
+                    )
+                }
+            }
         }
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        // Filtro por rango de fecha (ejemplo simple)
-        Text("Rango de fechas: ${dateRange.first ?: "inicio"} - ${dateRange.second ?: "fin"}")
-        // Podés reemplazar por DatePicker real o librería externa
+        // Spacer(modifier = Modifier.height(8.dp))
+        // TODO: Implementar filtro por rango de fecha si es necesario
     }
 }
+    
