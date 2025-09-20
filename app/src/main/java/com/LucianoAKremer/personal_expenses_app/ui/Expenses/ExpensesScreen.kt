@@ -1,13 +1,11 @@
 package com.LucianoAKremer.personal_expenses_app.ui // o com.LucianoAKremer.personal_expenses_app.ui.Expenses
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.PlaylistAdd // Asegúrate de importar este específicamente
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -21,6 +19,7 @@ import com.LucianoAKremer.personal_expenses_app.viewmodel.ExpenseViewModel
 import com.LucianoAKremer.personal_expenses_app.ui.AddCategoryDialog
 import com.LucianoAKremer.personal_expenses_app.ui.ExpenseItem
 import com.LucianoAKremer.personal_expenses_app.ui.Expenses.AddExpenseDialog
+import com.LucianoAKremer.personal_expenses_app.ui.Expenses.DeleteExpenseDialog
 import com.LucianoAKremer.personal_expenses_app.ui.FiltersPanel
 import com.LucianoAKremer.personal_expenses_app.ui.MetricsPanel
 
@@ -33,6 +32,9 @@ fun ExpensesScreen(viewModel: ExpenseViewModel) {
 
     var showAddExpenseDialog by remember { mutableStateOf(false) }
     var showAddCategoryDialog by remember { mutableStateOf(false) }
+    var showDeleteExpenseDialog by remember { mutableStateOf(false) }
+    var showDeleteCategoryDialog by remember { mutableStateOf(false) }
+    var selectedExpense by remember { mutableStateOf<com.LucianoAKremer.personal_expenses_app.data.Expense?>(null) }
 
     // Usar tu clase Category para el estado del filtro
     var selectedFilterCategory by remember { mutableStateOf<Category?>(null) }
@@ -41,13 +43,21 @@ fun ExpensesScreen(viewModel: ExpenseViewModel) {
         if (selectedFilterCategory == null) {
             allExpensesList
         } else {
-            // selectedFilterCategory.id ahora se resuelve correctamente
             allExpensesList.filter { it.categoryId == selectedFilterCategory?.id }
         }
     }
 
     Scaffold(
-        topBar = { TopAppBar(title = { Text("Gastos Personales") }) },
+        topBar = {
+            TopAppBar(
+                title = { Text("Gastos Personales") },
+                actions = {
+                    IconButton(onClick = { showDeleteCategoryDialog = true }) {
+                        Icon(Icons.Filled.Delete, contentDescription = "Borrar Categoría")
+                    }
+                }
+            )
+        },
         floatingActionButton = {
             Column {
                 FloatingActionButton(
@@ -58,7 +68,7 @@ fun ExpensesScreen(viewModel: ExpenseViewModel) {
                 }
                 FloatingActionButton(onClick = { showAddCategoryDialog = true }) {
                     Icon(
-                        Icons.Filled.PlaylistAdd, // Corregido: Usar directamente de Icons.Filled
+                        Icons.Filled.PlaylistAdd,
                         contentDescription = "Agregar Categoría"
                     )
                 }
@@ -72,12 +82,12 @@ fun ExpensesScreen(viewModel: ExpenseViewModel) {
         ) {
             FiltersPanel(
                 categories = categoriesList,
-                onCategorySelected = { category -> // 'category' es de tu tipo Category?
-                    selectedFilterCategory = category // Asignación correcta
+                onCategorySelected = { category ->
+                    selectedFilterCategory = category
                 }
             )
 
-            MetricsPanel(expenses = filteredExpenses) // Pasa la lista de Expense
+            MetricsPanel(expenses = filteredExpenses)
             Spacer(modifier = Modifier.height(8.dp))
 
             if (filteredExpenses.isEmpty()) {
@@ -94,7 +104,17 @@ fun ExpensesScreen(viewModel: ExpenseViewModel) {
                 LazyColumn {
                     items(filteredExpenses) { expense ->
                         val category = categoriesList.find { it.id == expense.categoryId }
-                        ExpenseItem(expense = expense, category = category)
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                        ) {
+                            ExpenseItem(expense = expense, category = category, modifier = Modifier.weight(1f))
+                            IconButton(onClick = {
+                                selectedExpense = expense
+                                showDeleteExpenseDialog = true
+                            }) {
+                                Icon(Icons.Filled.Delete, contentDescription = "Borrar Gasto")
+                            }
+                        }
                     }
                 }
             }
@@ -107,5 +127,20 @@ fun ExpensesScreen(viewModel: ExpenseViewModel) {
 
     if (showAddCategoryDialog) {
         AddCategoryDialog(viewModel = viewModel, onDismiss = { showAddCategoryDialog = false })
+    }
+
+    if (showDeleteExpenseDialog && selectedExpense != null) {
+        DeleteExpenseDialog(
+            viewModel = viewModel,
+            onDismiss = {
+                showDeleteExpenseDialog = false
+                selectedExpense = null
+            },
+            expenseToDelete = selectedExpense
+        )
+    }
+
+    if (showDeleteCategoryDialog) {
+        DeleteCategoryDialog(viewModel = viewModel, onDismiss = { showDeleteCategoryDialog = false })
     }
 }

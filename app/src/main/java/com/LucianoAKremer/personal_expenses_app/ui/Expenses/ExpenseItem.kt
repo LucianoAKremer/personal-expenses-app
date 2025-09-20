@@ -12,9 +12,9 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 @Composable
-fun ExpenseItem(expense: Expense, category: Category?) { // Añade category como parámetro
+fun ExpenseItem(expense: Expense, category: Category?, modifier: Modifier = Modifier) {
     Card(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(vertical = 4.dp, horizontal = 8.dp), // Ajusta padding
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp) // Sutil elevación
@@ -52,4 +52,3 @@ fun ExpenseItem(expense: Expense, category: Category?) { // Añade category como
         }
     }
 }
-    

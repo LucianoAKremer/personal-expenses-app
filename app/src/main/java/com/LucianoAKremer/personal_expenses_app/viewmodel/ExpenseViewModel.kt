@@ -49,5 +49,10 @@ class ExpenseViewModel(private val repository: ExpenseRepository) : ViewModel() 
             }
         }
     }
+
+    fun deleteCategory(category: Category) {
+        viewModelScope.launch {
+            repository.deleteCategory(category)
+        }
+    }
 }
-    

@@ -93,6 +93,5 @@ abstract class ExpenseDatabase : RoomDatabase() {
                 db.execSQL("CREATE INDEX IF NOT EXISTS index_expenses_categoryId ON expenses(categoryId)")
             }
         }
-
     }
 }

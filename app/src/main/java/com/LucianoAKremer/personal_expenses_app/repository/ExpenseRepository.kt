@@ -31,4 +31,8 @@ class ExpenseRepository(
     suspend fun getCategoryByName(name: String): Category? { // Nuevo método
         return categoryDao.getCategoryByName(name)
     }
+
+    suspend fun deleteCategory(category: Category) {
+        categoryDao.delete(category)
+    }
 }
